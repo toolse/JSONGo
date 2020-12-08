@@ -12,9 +12,10 @@ import VueHighlightJS from 'vue-highlightjs';
 Vue.use(VueHighlightJS);
 import './assets/styles/gruvbox-dark.css';
 
+// 引入代码编辑器
 import VueCodemirror from 'vue-codemirror';
-import 'codemirror/lib/codemirror.css';
 Vue.use(VueCodemirror);
+import 'codemirror/lib/codemirror.css';
 
 // Axios
 import axios from 'axios';
@@ -29,4 +30,4 @@ new Vue({
 }).$mount('#app');
 
 Vue.config.productionTip = false;
-// Vue.config.devtools = false;
+Vue.config.devtools = false;

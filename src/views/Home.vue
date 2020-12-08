@@ -32,20 +32,43 @@
 
 <script>
 const qs = require('qs');
+// 引入JS语言文件
+import 'codemirror/mode/xml/xml';
+import 'codemirror/mode/javascript/javascript';
+import '../assets/js/setting';
+
 export default {
-    components: {},
     data() {
         return {
             codeContent: '',
             sourcecode: '',
-            loading: false,
             cmOptions: {
-                tabSize: 4,
-                mode: 'json/go/xml',
-                theme: 'base16-dark',
-                lineNumbers: true,
+                tabSize: 4, // tab
+                styleActiveLine: true, // 高亮选中行
+                lineNumbers: true, // 显示行号
+                styleSelectedText: true,
                 line: true,
-                highlightDifferences: true
+                foldGutter: true, // 块槽
+                gutters: ['CodeMirror-lint-markers', 'CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+                highlightSelectionMatches: { showToken: /\w/, annotateScrollbar: true }, // 可以启用该选项来突出显示当前选中的内容的所有实例
+                modes: [
+                    // 模式, 可查看 codemirror/mode 中的所有模式
+                    'application/json',
+                    {
+                        ext: 'xml'
+                    }
+                ],
+                // hint.js options
+                hintOptions: {
+                    // 当匹配只有一项的时候是否自动补全
+                    completeSingle: false
+                },
+                // 快捷键 可提供三种模式 sublime、emacs、vim
+                keyMap: 'sublime',
+                matchBrackets: true,
+                showCursorWhenSelecting: true,
+                theme: 'gruvbox-dark', // 主题
+                extraKeys: { Ctrl: 'autocomplete' } // 可以用于为编辑器指定额外的键绑定，以及keyMap定义的键绑定
             }
         };
     },
@@ -89,7 +112,6 @@ export default {
 @primary2-color: fade(@primary-color, 80%);
 
 .layout-demo-1-vue {
-    height: 100%;
     .h-layout-header {
         background: @primary1-color;
         letter-spacing: 1px;
@@ -101,17 +123,19 @@ export default {
     }
     .h-layout-content {
         height: 100%;
-        padding: 20px;
+        margin: 20px;
         .h-row {
             .CodeMirror {
-                height: 80vh;
+                border-radius: 4px;
+                height: 75vh;
             }
+
             .h-btn-group {
                 float: right;
             }
             .h-panel {
-                height: 80vh;
-                overflow: hidden; // auto
+                height: 75vh;
+                overflow: hidden;
                 .h-panel-body {
                     overflow: auto;
                     height: inherit;
@@ -132,6 +156,10 @@ export default {
         line-height: 64px;
         height: 64px;
         text-align: center;
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
     }
 }
 </style>
