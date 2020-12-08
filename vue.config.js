@@ -1,4 +1,7 @@
 module.exports = {
+    devServer: {
+        port: 8000
+    },
     // 禁止生成map镜像文件
     productionSourceMap: false,
     // 判断环境：生产环境production、开发环境development

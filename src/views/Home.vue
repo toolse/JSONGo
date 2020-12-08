@@ -1,82 +1,129 @@
 <template>
     <Layout class="layout-demo-1-vue">
-        <HHeader>
-            <img src="../assets/logo.png" />
-            <Button color="primary">在线解析</Button>
-            <Button color="primary">JSON压缩转义</Button>
-            <Button color="primary">JS混淆加密</Button>
-            <DropdownMenu button class="h-btn-primary" @click="trigger" :datas="param">JSON生成实体类</DropdownMenu>
-            <Button color="primary">代码对比</Button>
-        </HHeader>
+        <HHeader> JSON / XML Convert</HHeader>
         <Content>
-            <Row :space-x="19" :space-y="5">
+            <Row :space="20">
                 <Cell width="12">
-                    <textarea v-model="textarea" placeholder="在此填入json字符串或XML字符串..."></textarea>
+                    <codemirror v-model="codeContent" :options="cmOptions" />
                 </Cell>
-                <Cell width="12"> <textarea v-model="textarea" placeholder="在此填入json字符串或XML字符串..."></textarea> </Cell>
+                <Cell width="12">
+                    <div class="h-panel">
+                        <div class="h-panel-bar">
+                            <span class="h-panel-title">输出结果</span>
+                            <!-- <Button color="blue" @click="sourcecode = ''">清空</Button>
+                            <Button color="primary" @click="convert">复制</Button>
+                            <Button color="primary" @click="convert">转换</Button> -->
+                            <div class="h-btn-group">
+                                <button class="h-btn" @click="convert"><i class="h-icon-refresh"></i><span>转换</span></button>
+                                <button class="h-btn" @click="copyCode"><i class="h-icon-complete"></i><span>复制</span></button>
+                                <button class="h-btn" @click="sourcecode = ''"><i class="h-icon-trash"></i><span>清空</span></button>
+                            </div>
+                        </div>
+                        <div class="h-panel-body">
+                            <pre v-highlightjs="sourcecode"><code class="go"></code></pre>
+                        </div>
+                    </div>
+                </Cell>
             </Row>
         </Content>
-        <HFooter>© 2020-2021 JSON-GO All right reserved</HFooter>
+        <HFooter>© 2020-2021 JSON / XML Convert All right reserved</HFooter>
     </Layout>
 </template>
 
 <script>
+const qs = require('qs');
 export default {
+    components: {},
     data() {
         return {
-            param: [
-                { title: 'JSON生成Java实体类', key: 'Java' },
-                { title: 'JSON生成C#实体类', key: 'C#' }
-            ],
-            textarea: ''
+            codeContent: '',
+            sourcecode: '',
+            loading: false,
+            cmOptions: {
+                tabSize: 4,
+                mode: 'json/go/xml',
+                theme: 'base16-dark',
+                lineNumbers: true,
+                line: true,
+                highlightDifferences: true
+            }
         };
     },
     methods: {
-        trigger(code) {
-            this.$Message.info(`您点击了${code}`);
-        },
-        copyText() {
+        // 复制
+        copyCode() {
+            if (this.sourcecode.length === 0) {
+                return this.$Message.warn('没有内容');
+            }
             this.$Clipboard({
-                text: this.text
+                text: this.sourcecode
             });
+        },
+        // 开始转换
+        async convert() {
+            try {
+                if (this.codeContent.length === 0) {
+                    return this.$Message.warn('内容不能为空');
+                }
+                const { data: res } = await this.$axios.post(
+                    '/postOriginContent',
+                    qs.stringify({
+                        content: this.codeContent
+                    })
+                );
+                if (res.content === 'unknown content') {
+                    return this.$Message.error(res.content);
+                }
+                this.sourcecode = res.content;
+                this.$Message.success('转换成功');
+            } catch (error) {
+                return this.$Message.error(`${error}`);
+            }
         }
     }
 };
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 @primary1-color: fade(@primary-color, 88%);
 @primary2-color: fade(@primary-color, 80%);
 
 .layout-demo-1-vue {
     height: 100%;
     .h-layout-header {
-        display: flex;
-        align-items: center;
+        background: @primary1-color;
+        letter-spacing: 1px;
+        color: white;
         box-shadow: 0 0 5px #d3d3d3;
-        img {
-            height: 32px;
-            margin: 0 40px;
-            cursor: pointer;
-        }
-        button,
-        .h-btn-primary {
-            margin-right: 20px;
-            box-shadow: none;
-        }
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
     }
     .h-layout-content {
+        height: 100%;
         padding: 20px;
-        text-align: center;
-        textarea {
-            height: 80vh;
-            width: 100%;
-            border: 4px solid #e3f5ed;
-            border-radius: 4px;
-            resize: none;
-        }
-        .h-col {
-            height: 100%;
+        .h-row {
+            .CodeMirror {
+                height: 80vh;
+            }
+            .h-btn-group {
+                float: right;
+            }
+            .h-panel {
+                height: 80vh;
+                overflow: hidden; // auto
+                .h-panel-body {
+                    overflow: auto;
+                    height: inherit;
+                    padding: 0;
+                    pre {
+                        height: inherit;
+                        .hljs {
+                            height: inherit;
+                        }
+                    }
+                }
+            }
         }
     }
     .h-layout-footer {

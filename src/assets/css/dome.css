@@ -1,7 +1,7 @@
 * {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
+    font-family: 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
 }
 
 html,
@@ -9,9 +9,3 @@ body,
 #app {
     height: 100%;
 }
-
-button,
-.h-btn-primary {
-    box-shadow: none;
-}
-
