@@ -1,6 +1,6 @@
 <template>
     <Layout class="layout-demo-1-vue">
-        <HHeader> JSON / XML Convert</HHeader>
+        <HHeader>JSON / XML Convert</HHeader>
         <Content>
             <Row :space="20">
                 <Cell width="12">
@@ -10,9 +10,6 @@
                     <div class="h-panel">
                         <div class="h-panel-bar">
                             <span class="h-panel-title">输出结果</span>
-                            <!-- <Button color="blue" @click="sourcecode = ''">清空</Button>
-                            <Button color="primary" @click="convert">复制</Button>
-                            <Button color="primary" @click="convert">转换</Button> -->
                             <div class="h-btn-group">
                                 <button class="h-btn" @click="convert"><i class="h-icon-refresh"></i><span>转换</span></button>
                                 <button class="h-btn" @click="copyCode"><i class="h-icon-complete"></i><span>复制</span></button>
@@ -129,13 +126,17 @@ export default {
                 border-radius: 4px;
                 height: 75vh;
             }
-
-            .h-btn-group {
-                float: right;
-            }
             .h-panel {
                 height: 75vh;
                 overflow: hidden;
+                position: relative;
+                .h-panel-bar {
+                    width: 100%;
+                    position: absolute;
+                    background: white;
+                    display: flex;
+                    justify-content: space-between;
+                }
                 .h-panel-body {
                     overflow: auto;
                     height: inherit;
@@ -143,6 +144,7 @@ export default {
                     pre {
                         height: inherit;
                         .hljs {
+                            padding: 60px 0 0 10px;
                             height: inherit;
                         }
                     }
