@@ -48,6 +48,7 @@ func main() {
 	}
 }
 
+// contentHandler 内容处理
 func contentHandler(g *gin.Context) {
 	content := g.PostForm("content")
 	if content == "" {
@@ -71,6 +72,7 @@ func contentHandler(g *gin.Context) {
 	})
 }
 
+// parseContent 解析内容
 func parseContent(content string) string {
 	var ret string
 	switch formatGuessing(content) {
@@ -94,6 +96,7 @@ func parseContent(content string) string {
 	return ret
 }
 
+// formatGuessing 检测字符串格式
 func formatGuessing(v string) int {
 	var tmp interface{}
 	if err := json.Unmarshal([]byte(v), &tmp); err == nil {
@@ -105,6 +108,7 @@ func formatGuessing(v string) int {
 	return UNKNOWN
 }
 
+// genStructFromJSON 自json生成结构体
 func genStructFromJSON(json string) (string, error) {
 	parser := json2go.NewJSONParser("AutoGenerator")
 	if err := parser.FeedBytes([]byte(json)); err != nil {
@@ -113,6 +117,7 @@ func genStructFromJSON(json string) (string, error) {
 	return parser.String(), nil
 }
 
+// genStructFromXML 自xml生成结构体
 func genStructFromXML(xml string) (string, error) {
 	root := &zek.Node{}
 	if _, err := root.ReadFrom(strings.NewReader(xml)); err != nil {
