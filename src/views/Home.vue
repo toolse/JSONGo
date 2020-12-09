@@ -4,15 +4,13 @@
         <Content>
             <Row :space="20">
                 <Cell width="12">
-                    <codemirror v-model="codeContent" :options="cmOptions" />
+                    <codemirror v-model="codeContent" :options="cmOptions" @blur="convert" />
                 </Cell>
                 <Cell width="12">
                     <div class="h-panel">
                         <div class="h-panel-bar">
                             <span class="h-panel-title">输出结果</span>
                             <div class="h-btn-group">
-                                <button class="h-btn" @click="convert"><i class="h-icon-refresh"></i><span>转换</span></button>
-                                <button class="h-btn" @click="copyCode"><i class="h-icon-complete"></i><span>复制</span></button>
                                 <button class="h-btn" @click="sourcecode = ''"><i class="h-icon-trash"></i><span>清空</span></button>
                             </div>
                         </div>
@@ -95,7 +93,7 @@ export default {
                     return this.$Message.error(res.content);
                 }
                 this.sourcecode = res.content;
-                this.$Message.success('转换成功');
+                this.copyCode();
             } catch (error) {
                 return this.$Message.error(`${error}`);
             }
