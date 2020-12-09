@@ -52,7 +52,8 @@ func main() {
 func contentHandler(g *gin.Context) {
 	content := g.PostForm("content")
 	if content == "" {
-		err := g.AbortWithError(http.StatusMethodNotAllowed, errors.New("content cannot be empty"))
+		err := g.AbortWithError(http.StatusMethodNotAllowed,
+			errors.New("content cannot be empty"))
 		if err != nil {
 			log.Println(err)
 		}
